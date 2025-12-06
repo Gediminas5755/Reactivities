@@ -15,3 +15,4 @@ C:\Users\gedim\Reactivities\Application\obj\Debug\net10.0\Application.dll
 C:\Users\gedim\Reactivities\Application\obj\Debug\net10.0\refint\Application.dll
 C:\Users\gedim\Reactivities\Application\obj\Debug\net10.0\Application.pdb
 C:\Users\gedim\Reactivities\Application\obj\Debug\net10.0\ref\Application.dll
+C:\Users\gedim\Reactivities\Application\obj\Debug\net10.0\Application.sourcelink.json

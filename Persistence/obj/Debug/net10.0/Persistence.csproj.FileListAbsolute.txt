@@ -13,3 +13,4 @@ C:\Users\gedim\Reactivities\Persistence\obj\Debug\net10.0\Persistence.dll
 C:\Users\gedim\Reactivities\Persistence\obj\Debug\net10.0\refint\Persistence.dll
 C:\Users\gedim\Reactivities\Persistence\obj\Debug\net10.0\Persistence.pdb
 C:\Users\gedim\Reactivities\Persistence\obj\Debug\net10.0\ref\Persistence.dll
+C:\Users\gedim\Reactivities\Persistence\obj\Debug\net10.0\Persistence.sourcelink.json
