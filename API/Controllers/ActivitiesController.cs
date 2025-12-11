@@ -2,21 +2,22 @@ using Domain;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Application.Activities.Queries;
+using Application.Activities.Commands;
 
 namespace API.Controllers;
 
-public class ActivitiesController(IMediator mediator) : BaseApiController
+public class ActivitiesController : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<List<Activity>>> GetActivities()
     {
-        return await mediator.Send(new GetActivityList.Querry());
+        return await Mediator.Send(new GetActivityList.Querry());
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Activity>> GetActivityDetail(string id)
     {
-        return await mediator.Send(new GetActivityDetails.Querry{ Id = id});
+        return await Mediator.Send(new GetActivityDetails.Querry{ Id = id});
 
         // var activity = await context.Activities.FindAsync(id);
         // if (activity == null)
@@ -24,5 +25,11 @@ public class ActivitiesController(IMediator mediator) : BaseApiController
         //     return NotFound();
         // }
         // return activity;
-    }
+    } 
+
+    [HttpPost]
+    public async Task<ActionResult<string>> CreateActivity(Activity activity)
+    {
+        return await Mediator.Send(new CreateActivity.Command { Activity = activity });
+    }   
 }
