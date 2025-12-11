@@ -1,27 +1,28 @@
-using System;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
-using Persistence;
-using Microsoft.EntityFrameworkCore;
+using MediatR;
+using Application.Activities.Queries;
 
 namespace API.Controllers;
 
-public class ActivitiesController(AppDbContext context) : BaseApiController
+public class ActivitiesController(IMediator mediator) : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<List<Activity>>> GetActivities()
     {
-        return await context.Activities.ToListAsync();
+        return await mediator.Send(new GetActivityList.Querry());
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Activity>> GetActivityDetail(string id)
     {
-        var activity = await context.Activities.FindAsync(id);
-        if (activity == null)
-        {
-            return NotFound();
-        }
-        return activity;
+        return await mediator.Send(new GetActivityDetails.Querry{ Id = id});
+
+        // var activity = await context.Activities.FindAsync(id);
+        // if (activity == null)
+        // {
+        //     return NotFound();
+        // }
+        // return activity;
     }
 }
