@@ -17,19 +17,19 @@ public class GetActivityList
     {
         public async Task<List<Activity>> Handle(Querry request, CancellationToken cancellationToken)
         {
-            try
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    await Task.Delay(1000, cancellationToken); 
-                    logger.LogInformation($"Task {i} completed");
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogInformation(ex, "Task was cancelled");
-            }
+            // try
+            // {
+            //     for (int i = 0; i < 10; i++)
+            //     {
+            //         cancellationToken.ThrowIfCancellationRequested();
+            //         await Task.Delay(1000, cancellationToken); 
+            //         logger.LogInformation($"Task {i} completed");
+            //     }
+            // }
+            // catch (Exception ex)
+            // {
+            //     logger.LogInformation(ex, "Task was cancelled");
+            // }
             return await context.Activities.ToListAsync(cancellationToken);
         }
     }

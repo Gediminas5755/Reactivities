@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2MamwMJJnOQ=",
+  "dgSpecHash": "+GJKn5kWTBE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\gedim\\Reactivities\\Application\\Application.csproj",
+  "projectFilePath": "c:\\Users\\gedim\\Reactivities\\Application\\Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\gedim\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\gedim\\.nuget\\packages\\mediatr\\14.0.0\\mediatr.14.0.0.nupkg.sha512",
