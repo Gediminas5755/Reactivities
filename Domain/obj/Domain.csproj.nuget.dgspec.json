@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\gedim\\Reactivities\\Domain\\Domain.csproj": {}
+    "C:\\Users\\gedim\\Reactivities\\Domain\\Domain.csproj": {}
   },
   "projects": {
-    "c:\\Users\\gedim\\Reactivities\\Domain\\Domain.csproj": {
+    "C:\\Users\\gedim\\Reactivities\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\gedim\\Reactivities\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\Users\\gedim\\Reactivities\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "c:\\Users\\gedim\\Reactivities\\Domain\\Domain.csproj",
+        "projectPath": "C:\\Users\\gedim\\Reactivities\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\gedim\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\gedim\\Reactivities\\Domain\\obj\\",
+        "outputPath": "C:\\Users\\gedim\\Reactivities\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\gedim\\AppData\\Roaming\\NuGet\\NuGet.Config"
