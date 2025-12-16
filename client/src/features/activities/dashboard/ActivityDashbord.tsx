@@ -4,13 +4,16 @@ import ActivityDetail from "../details/ActivityDetail";
 
 type Props = {
     activities: Activity[]
+    selectActivity: (id: string) => void
+    cancelSelectActivity: () => void    
+    selectedActivity?: Activity
 }
 
-export default function ActivityDashbord({ activities }: Props) {
+export default function ActivityDashbord({ activities, selectActivity, cancelSelectActivity, selectedActivity }: Props) {
     return (
         <Grid2 container spacing={3}>
             <Grid2 size={7}>
-                <ActivityList activities={activities} />
+                <ActivityList activities={activities} selectActivity={selectActivity} />
                 {/* <List>
                     {activities.map((activity) => (
                         <ListItem key={activity.id}>
@@ -20,7 +23,8 @@ export default function ActivityDashbord({ activities }: Props) {
                 </List> */}
             </Grid2>
              <Grid2 size={5}>
-                {activities[0] &&  <ActivityDetail activity={activities[0]} />} 
+                {selectedActivity &&  
+                <ActivityDetail activity={selectedActivity} cancelSelectActivity={cancelSelectActivity} />} 
             </Grid2>
         </Grid2>
     )
