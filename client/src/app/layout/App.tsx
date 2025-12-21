@@ -6,9 +6,9 @@ import ActivityDashbord from "../../features/activities/dashboard/ActivityDashbo
 
 function App() {
   const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
-  
   const [activities, setActivities1] = useState<Activity[]>([]);
-  
+  const [editMode, setEditMode] = useState(false);
+
   useEffect(() => {
     axios.get<Activity[]>("https://localhost:5001/api/activities")
       .then((response) => setActivities1(response.data))
@@ -24,15 +24,28 @@ const handleCancelSelectActivity = () => {
   setSelectedActivity(undefined);
 }
 
+const handleOpenForm = (id?: string) => {
+  id ? handleSelectActivity(id) : handleCancelSelectActivity();
+  setEditMode(true);
+}
+
+const handleCloseForm = () => {  
+  setEditMode(false);
+}
+
   return (
     <Box sx={{bgcolor:"#eeeeee"}}>
       <CssBaseline />
-      <NavBar />
+      <NavBar openForm={handleOpenForm} />
       <Container maxWidth="xl" sx={{ mt: 3 }}>
         <ActivityDashbord activities={activities} 
         selectActivity={handleSelectActivity} 
         cancelSelectActivity={handleCancelSelectActivity}
-        selectedActivity={selectedActivity}/>
+        selectedActivity={selectedActivity}
+        editMode={editMode}
+        closeForm={handleCloseForm}
+        openForm={handleOpenForm}
+        />
       </Container>
     </Box>
 
