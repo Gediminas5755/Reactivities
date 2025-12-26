@@ -6,6 +6,7 @@ type Props = {
 }
 export default function ActivityForm({activity, closeForm }: Props) {
     const {updateActivity} = useActivities();
+    const {createActivity} = useActivities();
 
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -31,7 +32,10 @@ export default function ActivityForm({activity, closeForm }: Props) {
             await updateActivity.mutateAsync(data as unknown as Activity);
             closeForm();
         }
-
+        else {
+            await createActivity.mutateAsync(data as unknown as Activity);
+            closeForm();
+        }
         //submitForm(data as unknown as Activity);
         // console.log(data);
     }
@@ -51,7 +55,7 @@ export default function ActivityForm({activity, closeForm }: Props) {
                 <Box display="flex" justifyContent="end" gap={3} >
                     <Button color='inherit' onClick={closeForm}>Cancel</Button>
                     <Button type="submit" color='success' variant="contained"
-                     disabled={updateActivity?.isPending}>Submit</Button>
+                     disabled={updateActivity?.isPending || createActivity?.isPending}>Submit</Button>
                 </Box>
             </Box>
         </Paper>

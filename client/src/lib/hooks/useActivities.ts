@@ -12,8 +12,8 @@ export const useActivities = () => {
         }
     });
 
-    
-    
+
+
     const updateActivity = useMutation({
         mutationFn: async (activity: Activity) => {
             await agent.put(`/activities`, activity);
@@ -22,8 +22,17 @@ export const useActivities = () => {
             await queryClient.invalidateQueries({ queryKey: ['activities'] });
         }
     })
-    
-    return { activities, isPending, updateActivity };
+
+    const createActivity = useMutation({
+        mutationFn: async (activity: Activity) => {
+            await agent.post(`/activities`, activity);
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['activities'] });
+        }
+    })
+
+    return { activities, isPending, updateActivity, createActivity };
     // const createActivity = useMutation({
     //     mutationFn: async (activity: Activity) => {
     //         await agent.post(`/activities`, activity);
