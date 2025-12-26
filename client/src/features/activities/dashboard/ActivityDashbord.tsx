@@ -11,16 +11,15 @@ type Props = {
     editMode: boolean
     openForm: (id: string) => void
     closeForm: () => void
-    deleteActivity: (id: string) => void
 }
 
 export default function ActivityDashbord({
     activities, selectActivity, cancelSelectActivity, 
-    selectedActivity, editMode, openForm, closeForm, deleteActivity }: Props) {
+    selectedActivity, editMode, openForm, closeForm }: Props) {
     return (
         <Grid2 container spacing={3}>
             <Grid2 size={7}>
-                <ActivityList activities={activities} deleteActivity={deleteActivity} selectActivity={selectActivity} />
+                <ActivityList activities={activities} selectActivity={selectActivity} />
                 {/* <List>
                     {activities.map((activity) => (
                         <ListItem key={activity.id}>
