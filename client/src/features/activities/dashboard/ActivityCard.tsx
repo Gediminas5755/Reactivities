@@ -1,5 +1,5 @@
 import { AccessTime, Place } from "@mui/icons-material";
-import { Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, Chip, Divider, Typography } from "@mui/material"
+import { Avatar, Box, Button, Card, CardContent, CardHeader, Chip, Divider, Typography } from "@mui/material"
 import { Link } from "react-router";
 
 
@@ -13,10 +13,10 @@ export default function ActivityCard({ activity }: Props) {
 
     const label = isHost ? 'You are hosting this activity' : isGoing ? 'You are going to this activity' : '';
     const isCancelled = false;
-    const isUser = !isHost && isGoing;
+    // const isUser = !isHost && isGoing;
     const color = isHost ? 'secondary' : isGoing ? 'warning' : 'default';
 
-    const showLabel = isHost || isGoing;
+    // const showLabel = isHost || isGoing;
 
 
     return (
