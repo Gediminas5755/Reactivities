@@ -14,6 +14,7 @@ import ActivityDetail from "../../features/activities/details/ActivityDetail";
             {   path: "activities", element: <ActivityDashbord />  },
             {   path: "activities/:id", element: <ActivityDetail />  },
             {   path: "createActivity", element: <ActivityForm />  },
+            {   path: "manage/:id", element: <ActivityForm />  },
         ]
 
     }
