@@ -1,10 +1,11 @@
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useActivities } from "../../../lib/hooks/useActivities";
 import { useNavigate, useParams } from "react-router";
+import Edit from "@mui/icons-material/Edit";
 
 export default function ActivityForm() {
-    const {id} = useParams();
-    const { updateActivity, createActivity, activity,isLoadingActivity } = useActivities(id);
+    const { id } = useParams();
+    const { updateActivity, createActivity, activity, isLoadingActivity } = useActivities(id);
     // const activity = {} as Activity; // Replace with actual activity when editing
     const navigate = useNavigate();
 
@@ -44,7 +45,9 @@ export default function ActivityForm() {
 
     return (
         <Paper sx={{ borderRadius: 3, p: 3 }}>
-            <Typography variant="h5" gutterBottom color="primary">Create Activity</Typography>
+            <Typography variant="h5" gutterBottom color="primary">
+                {activity ? 'Edit Activity' : 'Create Activity'}
+            </Typography>
             <Box display="flex" onSubmit={handleSubmit} component="form" flexDirection="column" gap={3}>
                 {/* uncontrolled/controlled input */}
                 <TextField name="title" label="Title" defaultValue={activity?.title} />

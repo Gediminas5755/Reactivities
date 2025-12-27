@@ -13,7 +13,7 @@ import ActivityDetail from "../../features/activities/details/ActivityDetail";
             {   path: "", element: <HomePage />  },
             {   path: "activities", element: <ActivityDashbord />  },
             {   path: "activities/:id", element: <ActivityDetail />  },
-            {   path: "createActivity", element: <ActivityForm />  },
+            {   path: "createActivity", element: <ActivityForm key="create" />  },
             {   path: "manage/:id", element: <ActivityForm />  },
         ]
 
