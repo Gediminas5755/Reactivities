@@ -1,9 +1,9 @@
-using Domain;
-using Microsoft.AspNetCore.Mvc;
-using MediatR;
-using Application.Activities.Queries;
 using Application.Activities.Commands;
 using Application.Activities.DTOs;
+using Application.Activities.Queries;
+using Domain;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
@@ -18,14 +18,9 @@ public class ActivitiesController : BaseApiController
     [HttpGet("{id}")]
     public async Task<ActionResult<Activity>> GetActivityDetail(string id)
     {
-        return await Mediator.Send(new GetActivityDetails.Querry { Id = id });
+        var result = await Mediator.Send(new GetActivityDetails.Querry { Id = id });
 
-        // var activity = await context.Activities.FindAsync(id);
-        // if (activity == null)
-        // {
-        //     return NotFound();
-        // }
-        // return activity;
+        return HandleResult(result);
     }
 
     [HttpPost]
