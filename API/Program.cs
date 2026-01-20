@@ -23,8 +23,11 @@ builder.Services.AddMediatR(x =>
 
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 builder.Services.AddValidatorsFromAssemblyContaining<Application.Activities.Validators.CreateActivityValidator>();
+builder.Services.AddTransient<API.Middleware.ExceptionMiddleware>();//AddTransient instantiates only when needed
 
 var app = builder.Build();
+
+app.UseMiddleware<API.Middleware.ExceptionMiddleware>();
 
 app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod()
                             .WithOrigins("http://localhost:3000","https://localhost:3000"));
