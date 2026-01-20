@@ -18,6 +18,7 @@ builder.Services.AddCors();
 builder.Services.AddMediatR(x =>
 {
     x.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>();
+    x.AddOpenBehavior(typeof(ValidationBehavior<,>));
 });
 
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
