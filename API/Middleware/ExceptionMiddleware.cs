@@ -1,8 +1,9 @@
+using Application.Core;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 namespace API.Middleware;
 
-public class ExceptionMiddleware : IMiddleware
+public class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger, IHostEnvironment env) : IMiddleware
 {
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
@@ -13,21 +14,29 @@ public class ExceptionMiddleware : IMiddleware
         catch (ValidationException ex)
         {
             await HandleExceptionAsync(context, ex);
-            // context.Response.ContentType = "application/json";
-            // context.Response.StatusCode = 400;
-            // var errors = ex.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
-            // await context.Response.WriteAsync(new
-            // {
-            //     StatusCode = context.Response.StatusCode,
-            //     Errors = errors
-            // }.ToString());
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            // _logger.LogError(ex, "An error occurred");
-            // await HandleExceptionAsync(context, ex);
+            await HandleException(context, ex);
         }
+    }
+
+    private async Task HandleException(HttpContext context, Exception ex)
+    {
+        logger.LogError(ex, ex.Message);
+
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+        var response = env.IsDevelopment()
+        ? new AppException(context.Response.StatusCode, ex.Message, ex.StackTrace)
+        : new AppException(context.Response.StatusCode, ex.Message, null);
+
+        var options = new System.Text.Json.JsonSerializerOptions { PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase };
+
+        var json = System.Text.Json.JsonSerializer.Serialize(response, options);
+
+        await context.Response.WriteAsync(json);
     }
 
     private static async Task HandleExceptionAsync(HttpContext context, ValidationException ex)
