@@ -1,5 +1,6 @@
 using Application.Activities.Queries;
 using Application.Core;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -20,6 +21,7 @@ builder.Services.AddMediatR(x =>
 });
 
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+builder.Services.AddValidatorsFromAssemblyContaining<Application.Activities.Validators.CreateActivityValidator>();
 
 var app = builder.Build();
 
