@@ -32,6 +32,9 @@ export default function NavBar() {
               <MenuItemLink to='/counter'>
                 Counter
               </MenuItemLink>
+              <MenuItemLink to='/errors'>
+                Errors
+              </MenuItemLink>
             </Box>
             <MenuItem>
               user menu
@@ -40,7 +43,7 @@ export default function NavBar() {
         </Container>
 
         <Observer>
-          {() => uiStore.isLoading ?(
+          {() => uiStore.isLoading ? (
             <LinearProgress color="secondary" sx={{ position: 'absolute', bottom: 0, left: 0, height: 4, width: '100%' }} />
           ) : null}
         </Observer>
