@@ -3,9 +3,13 @@ import { useActivities } from "../../../lib/hooks/useActivities";
 import { useNavigate, useParams } from "react-router";
 import { useForm, type FieldValues } from "react-hook-form";
 import { useEffect } from "react";
+import { activitySchema, type ActivitySchema } from "../../../lib/schemas/activitySchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function ActivityForm() {
-    const { register, reset, handleSubmit } = useForm();
+    const { register, reset, handleSubmit, formState: { errors } } = useForm<ActivitySchema>({
+        resolver: zodResolver(activitySchema)
+    });
     const { id } = useParams();
     const { updateActivity, createActivity, activity, isLoadingActivity } = useActivities(id);
 
@@ -28,8 +32,9 @@ export default function ActivityForm() {
                 {activity ? 'Edit Activity' : 'Create Activity'}
             </Typography>
             <Box display="flex" onSubmit={handleSubmit(onSubmit)} component="form" flexDirection="column" gap={3}>
-                {/* uncontrolled/controlled input */}
-                <TextField {...register("title")} label="Title" defaultValue={activity?.title} />
+                {/* uncontrolled/controlled input    !!errors.title   if that exists */}
+                <TextField {...register("title")}
+                    error={!!errors.title} helperText={errors.title?.message} label="Title" defaultValue={activity?.title} />
                 <TextField {...register("description")} label="Description" defaultValue={activity?.description} multiline rows={3} />
                 <TextField {...register("category")} label="Category" defaultValue={activity?.category} />
                 <TextField {...register("date")} label="Date" type="date" defaultValue={activity?.date ?
