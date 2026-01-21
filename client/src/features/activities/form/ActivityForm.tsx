@@ -1,13 +1,14 @@
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useActivities } from "../../../lib/hooks/useActivities";
-import { useNavigate, useParams } from "react-router";
-import { useForm, type FieldValues } from "react-hook-form";
+import { useParams } from "react-router";
+import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { activitySchema, type ActivitySchema } from "../../../lib/schemas/activitySchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function ActivityForm() {
     const { register, reset, handleSubmit, formState: { errors } } = useForm<ActivitySchema>({
+        mode: 'onTouched',
         resolver: zodResolver(activitySchema)
     });
     const { id } = useParams();
@@ -17,10 +18,7 @@ export default function ActivityForm() {
         if (activity) reset(activity);
     }, [activity, reset]);
 
-    // const activity = {} as Activity; // Replace with actual activity when editing
-    const navigate = useNavigate();
-
-    const onSubmit = (data: FieldValues) => {
+    const onSubmit = (data: ActivitySchema) => {
 
     }
 

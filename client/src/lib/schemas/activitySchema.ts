@@ -1,12 +1,14 @@
 import {z} from 'zod';
 
+const requiredString = (fieldName: string) => z.string().min(1, {error: `${fieldName} is required`});
+
 export const activitySchema = z.object({
-    title: z.string({error: "Title is required"}).min(1, {error: "Title is required"}).max(100),
-    description: z.string().min(1).max(500),
-    category: z.string().min(1).max(100),
-    date: z.string().min(1).max(100),
-    city: z.string().min(1).max(100),
-    venue: z.string().min(1).max(100)
+    title: requiredString('Title'),
+    description: requiredString('Description'),
+    category: requiredString('Category'),
+    date: requiredString('Date'),
+    city: requiredString('City'),
+    venue: requiredString('Venue')
 });
 
 export type ActivitySchema = z.infer<typeof activitySchema>;
