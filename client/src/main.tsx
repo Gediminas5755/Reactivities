@@ -12,17 +12,24 @@ import { RouterProvider } from 'react-router';
 import { router } from './app/router/Routes.tsx';
 import { store, StoreContext } from './lib/stores/store.ts';
 import { ToastContainer } from 'react-toastify';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+// If you are using date-fns v3.x or v4.x, please import `AdapterDateFns`
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+// If you are using date-fns v2.x, please import the v2 adapter
+// import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2';
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
     <StoreContext.Provider value={store}>
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools/>
+        <ReactQueryDevtools />
         <ToastContainer position="bottom-right" hideProgressBar theme='colored' />
         <RouterProvider router={router} />
       </QueryClientProvider>
     </StoreContext.Provider>
+    </LocalizationProvider>
   </StrictMode>,
 )
