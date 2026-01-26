@@ -1,3 +1,4 @@
+import { LabelImportantRounded } from '@mui/icons-material';
 import { z } from 'zod';
 
 const requiredString = (fieldName: string) => z
@@ -11,8 +12,13 @@ export const activitySchema = z.object({
     date: z.coerce.date({
         message: 'Date is required'
     }),
-    city: requiredString('City'),
-    venue: requiredString('Venue')
+    location: z.object({
+        venue: requiredString('Venue'),
+        city: z.string().optional(),
+        latitude : z.coerce.number(),
+        longitude : z.coerce.number(),
+    })
+
 });
 
 export type ActivitySchema = z.infer<typeof activitySchema>;
