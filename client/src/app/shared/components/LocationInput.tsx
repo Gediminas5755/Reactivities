@@ -3,7 +3,6 @@ import { type FieldValues, type UseControllerProps, useController } from "react-
 import type { LocationIQSuggestion } from "../../../lib/types";
 import { Box, debounce, List, ListItemButton, TextField, Typography } from "@mui/material";
 import axios from "axios";
-import { el } from "date-fns/locale";
 
 type Props<T extends FieldValues> = {
     label: string;
@@ -55,7 +54,7 @@ export default function LocationInput<T extends FieldValues>(props: Props<T>) {
     };
 
     const handleSelect = (location: LocationIQSuggestion) => {
-        const city = location.address?.city || location.address?.town || location.address?.village;
+        const city = location.address?.city || location.address?.town || location.address?.village || '';
         const venue = location.display_name;
         const latitude = parseFloat(location.lat);
         const longitude = parseFloat(location.lon);

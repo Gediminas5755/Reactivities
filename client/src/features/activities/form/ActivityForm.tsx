@@ -1,6 +1,6 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useActivities } from "../../../lib/hooks/useActivities";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { activitySchema, type ActivitySchema } from "../../../lib/schemas/activitySchema";
@@ -10,21 +10,50 @@ import SelectInput from "../../../app/shared/components/SelectInput";
 import { categoryOptions } from "./CategoryOptions";
 import DateTimeInput from "../../../app/shared/components/DateTimeInput";
 import LocationInput from "../../../app/shared/components/LocationInput";
+import type { Activity } from "../../../lib/types";
 
 export default function ActivityForm() {
     const { control, reset, handleSubmit } = useForm<ActivitySchema>({
         mode: 'onTouched',
         resolver: zodResolver(activitySchema)
     });
+    const navigate = useNavigate();
     const { id } = useParams();
     const { updateActivity, createActivity, activity, isLoadingActivity } = useActivities(id);
 
     useEffect(() => {
-        if (activity) reset(activity);
+        if (activity)
+            reset({
+                ...activity,
+                location: {
+                    city: activity.city,
+                    venue: activity.venue,
+                    latitude: activity.latitude,
+                    longitude: activity.longitude
+                }
+            });
     }, [activity, reset]);
 
-    const onSubmit = (data: ActivitySchema) => {
+    const onSubmit = async (data: ActivitySchema) => {
+        const { location, ...rest } = data;
+        const flattenedData = { ...rest, ...location };
 
+        try {
+            if (activity) {
+                updateActivity.mutate({ ...activity, ...flattenedData } as Activity, {
+                    onSuccess: () => navigate(`/activities/${activity.id}`)
+                });
+            }
+            else {
+                const activity = flattenedData as Activity;
+                createActivity.mutate(activity, {
+                    onSuccess: (id) => navigate(`/activities/${id}`)
+                });
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
 
     if (isLoadingActivity) return <Typography>Loading activity...</Typography>;
@@ -38,8 +67,11 @@ export default function ActivityForm() {
                 {/* uncontrolled/controlled input    !!errors.title   if that exists */}
                 <TextInput label="Title" control={control} name="title" />
                 <TextInput name="description" control={control} label="Description" multiline rows={3} />
-                <SelectInput name="category" control={control} label="Category" items={categoryOptions} />
-                <DateTimeInput name="date" control={control} label="Date" />
+
+                <Box display="flex" gap={3}>
+                    <SelectInput name="category" control={control} label="Category" items={categoryOptions} />
+                    <DateTimeInput name="date" control={control} label="Date" />
+                </Box>
 
                 <LocationInput name="location" label="Enter the location" control={control} />
 
