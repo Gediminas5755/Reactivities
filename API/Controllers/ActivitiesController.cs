@@ -10,13 +10,14 @@ namespace API.Controllers;
 
 public class ActivitiesController : BaseApiController
 {
+    // [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<List<Activity>>> GetActivities(CancellationToken token)
     {
         return await Mediator.Send(new GetActivityList.Querry(), token);
     }
 
-    [Authorize]
+    // [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<Activity>> GetActivityDetail(string id)
     {
