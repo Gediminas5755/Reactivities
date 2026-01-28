@@ -1,15 +1,17 @@
 import { Group } from '@mui/icons-material'
-import { Box, AppBar, Toolbar, Typography, Button, Container, MenuItem, LinearProgress } from '@mui/material'
+import { Box, AppBar, Toolbar, Typography, Container, MenuItem, LinearProgress} from '@mui/material'
 import { NavLink } from 'react-router'
 import MenuItemLink from '../shared/components/MenuItemLink'
 import { useStore } from '../../lib/hooks/useStore';
 import { Observer } from 'mobx-react-lite';
+import { useAccount } from '../../lib/hooks/useAccount';
 
 
 export default function NavBar() {
   const { uiStore } = useStore();
-  return (
+  const { currentUser } = useAccount();
 
+  return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ position: 'relative', top: 0, left: 0, width: '100%', backgroundImage: 'linear-gradient(135deg, #182a73 0%, #218aae 69%, #20a7ac 89%)' }}>
         <Container maxWidth="xl">
@@ -36,9 +38,16 @@ export default function NavBar() {
                 Errors
               </MenuItemLink>
             </Box>
-            <MenuItem>
-              user menu
-            </MenuItem>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              {currentUser ? (
+                <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                  Welcome, {currentUser.displayName}
+                </Typography>
+              ) : (<>
+                <MenuItemLink to='/login'>Login</MenuItemLink>
+                <MenuItemLink to='/register'>Register</MenuItemLink>
+              </>)}
+            </Box>
           </Toolbar>
         </Container>
 
