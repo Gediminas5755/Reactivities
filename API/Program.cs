@@ -1,6 +1,8 @@
 using Application.Activities.Queries;
 using Application.Core;
+using Domain;
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -24,14 +26,24 @@ builder.Services.AddMediatR(x =>
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 builder.Services.AddValidatorsFromAssemblyContaining<Application.Activities.Validators.CreateActivityValidator>();
 builder.Services.AddTransient<API.Middleware.ExceptionMiddleware>();//AddTransient instantiates only when needed
+builder.Services.AddIdentityApiEndpoints<User>(opt =>
+{
+    opt.User.RequireUniqueEmail = true;
+})
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<AppDbContext>();
 
 var app = builder.Build();
 
 app.UseMiddleware<API.Middleware.ExceptionMiddleware>();
 
 app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod()
-                            .WithOrigins("http://localhost:3000","https://localhost:3000"));
+                            .WithOrigins("http://localhost:3000", "https://localhost:3000"));
+
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
+app.MapGroup("api").MapIdentityApi<User>();// we will use same api path prefix "api/login" for identity endpoints
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
@@ -39,8 +51,9 @@ var services = scope.ServiceProvider;
 try
 {
     var context = services.GetRequiredService<AppDbContext>();
+    var userManager = services.GetRequiredService<UserManager<User>>();
     await context.Database.MigrateAsync();
-    await DbInitializer.SeedData(context);
+    await DbInitializer.SeedData(context, userManager);
 }
 catch (Exception ex)
 {
