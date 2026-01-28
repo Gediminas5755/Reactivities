@@ -1,6 +1,10 @@
-﻿namespace Persistence;
+﻿using Domain;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
-public class Class1
+namespace Persistence;
+
+public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<User>(options)
 {
-
+    public required DbSet<Activity> Activities { get; set; }
 }
