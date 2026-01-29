@@ -5,6 +5,7 @@ import MenuItemLink from '../shared/components/MenuItemLink'
 import { useStore } from '../../lib/hooks/useStore';
 import { Observer } from 'mobx-react-lite';
 import { useAccount } from '../../lib/hooks/useAccount';
+import UserMenu from './UserMenu';
 
 
 export default function NavBar() {
@@ -28,9 +29,9 @@ export default function NavBar() {
               <MenuItemLink to='/activities'>
                 Activities
               </MenuItemLink>
-              <MenuItemLink to='/createActivity'>
+              {/* <MenuItemLink to='/createActivity'>
                 Create Activity
-              </MenuItemLink>
+              </MenuItemLink> */}
               <MenuItemLink to='/counter'>
                 Counter
               </MenuItemLink>
@@ -40,9 +41,7 @@ export default function NavBar() {
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               {currentUser ? (
-                <Typography variant="subtitle1" sx={{ color: 'white' }}>
-                  Welcome, {currentUser.displayName}
-                </Typography>
+                <UserMenu/>
               ) : (<>
                 <MenuItemLink to='/login'>Login</MenuItemLink>
                 <MenuItemLink to='/register'>Register</MenuItemLink>
