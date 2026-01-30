@@ -1,29 +1,23 @@
 import { useAccount } from "../../lib/hooks/useAccount"
 import { useForm } from "react-hook-form";
-import { loginSchema, type LoginSchema } from "../../lib/schemas/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod.js";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { LockOpen } from "@mui/icons-material";
 import TextInput from "../../app/shared/components/TextInput";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link } from "react-router";
+import { registerSchema, type RegisterSchema } from "../../lib/schemas/registerSchema";
 
-export default function LoginForm() {
-    const { loginUser } = useAccount();
-    const navigate = useNavigate();
-    const location = useLocation();
+export default function RegisterForm() {
+    const { registerUser } = useAccount();
 
-    const { control, handleSubmit, formState: { isValid, isSubmitting } } = useForm<LoginSchema>({
+    const { control, handleSubmit, formState: { isValid, isSubmitting } } = useForm<RegisterSchema>({
         mode: 'onTouched',
-        resolver: zodResolver(loginSchema)
+        resolver: zodResolver(registerSchema)
     });
 
-    const onSubmit = async (data: LoginSchema) => {
+    const onSubmit = async (data: RegisterSchema) => {
 
-        await loginUser.mutateAsync(data, {
-            onSuccess: () => {
-                navigate(location.state?.from || '/activities');
-            }
-        });
+        await registerUser.mutateAsync(data);
     };
 
     return (
@@ -41,17 +35,18 @@ export default function LoginForm() {
             }}>
             <Box display="flex" alignItems="center" justifyContent='center' color="secondary.main" gap={3}>
                 <LockOpen fontSize="large" />
-                <Typography variant="h4" >Sign In</Typography>
+                <Typography variant="h4" >Register</Typography>
             </Box>
             <TextInput name="email" control={control} label="Email" />
+            <TextInput name="displayName" control={control} label="Display Name" />
             <TextInput name="password" control={control} label="Password" type="password" />
             <Button type="submit" variant="contained" size="large" color="primary" disabled={!isValid || isSubmitting}>
-                Login
+                Register
             </Button>
             <Typography sx={{ textAlign: 'center' }}>
-                Dont't have an account?
-                <Typography component={Link} to="/register" color="primary" sx={{ ml: 2 }}>
-                    Sign up
+                Already have an account?
+                <Typography component={Link} to="/login" color="primary" sx={{ ml: 2 }}>
+                    Sign in
                 </Typography>
             </Typography>
         </Paper>
