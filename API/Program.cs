@@ -29,6 +29,8 @@ builder.Services.AddMediatR(x =>
     x.AddOpenBehavior(typeof(ValidationBehavior<,>));
 });
 
+builder.Services.AddScoped<Application.Interfaces.IUserAccessor, Infrastructure.UserAccessor>();
+// builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 builder.Services.AddValidatorsFromAssemblyContaining<Application.Activities.Validators.CreateActivityValidator>();
 builder.Services.AddTransient<API.Middleware.ExceptionMiddleware>();//AddTransient instantiates only when needed
