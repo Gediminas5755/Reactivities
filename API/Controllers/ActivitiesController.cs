@@ -12,7 +12,7 @@ public class ActivitiesController : BaseApiController
 {
     // [AllowAnonymous]
     [HttpGet]
-    public async Task<ActionResult<List<Activity>>> GetActivities(CancellationToken token)
+    public async Task<ActionResult<List<ActivityDto>>> GetActivities(CancellationToken token)
     {
         return await Mediator.Send(new GetActivityList.Querry(), token);
     }

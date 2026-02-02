@@ -4,18 +4,21 @@ using MediatR;
 using Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using AutoMapper;
+using Application.Activities.DTOs;
+using AutoMapper.QueryableExtensions;
 
 namespace Application.Activities.Queries;
 
 public class GetActivityList
 {
-    public class Querry : IRequest<List<Activity>>
+    public class Querry : IRequest<List<ActivityDto>>
     {
     }
 
-    public class Handler(AppDbContext context, ILogger<GetActivityList> logger) : IRequestHandler<Querry, List<Activity>>
+    public class Handler(AppDbContext context, ILogger<GetActivityList> logger, IMapper mapper) : IRequestHandler<Querry, List<ActivityDto>>
     {
-        public async Task<List<Activity>> Handle(Querry request, CancellationToken cancellationToken)
+        public async Task<List<ActivityDto>> Handle(Querry request, CancellationToken cancellationToken)
         {
             // try
             // {
@@ -30,7 +33,9 @@ public class GetActivityList
             // {
             //     logger.LogInformation(ex, "Task was cancelled");
             // }
-            return await context.Activities.ToListAsync(cancellationToken);
+            return await context.Activities
+                .ProjectTo<ActivityDto>(mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
         }
     }
 }
