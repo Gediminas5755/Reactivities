@@ -71,5 +71,15 @@
     "C:\\Users\\gedim\\.nuget\\packages\\system.security.cryptography.pkcs\\9.0.4\\system.security.cryptography.pkcs.9.0.4.nupkg.sha512",
     "C:\\Users\\gedim\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.4\\system.security.cryptography.protecteddata.9.0.4.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "message": "Problem reading the cache file C:\\Users\\gedim\\Reactivities\\Persistence\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
+      "projectPath": "C:\\Users\\gedim\\Reactivities\\Persistence\\Persistence.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\gedim\\Reactivities\\Persistence\\Persistence.csproj",
+      "targetGraphs": []
+    }
+  ]
 }

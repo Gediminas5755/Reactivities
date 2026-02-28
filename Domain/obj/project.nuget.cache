@@ -28,5 +28,15 @@
     "C:\\Users\\gedim\\.nuget\\packages\\microsoft.extensions.options.configurationextensions\\10.0.2\\microsoft.extensions.options.configurationextensions.10.0.2.nupkg.sha512",
     "C:\\Users\\gedim\\.nuget\\packages\\microsoft.extensions.primitives\\10.0.2\\microsoft.extensions.primitives.10.0.2.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "message": "Problem reading the cache file C:\\Users\\gedim\\Reactivities\\Domain\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
+      "projectPath": "C:\\Users\\gedim\\Reactivities\\Domain\\Domain.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\gedim\\Reactivities\\Domain\\Domain.csproj",
+      "targetGraphs": []
+    }
+  ]
 }
