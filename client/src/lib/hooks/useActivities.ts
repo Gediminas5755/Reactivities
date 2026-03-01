@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import agent from "../api/agent";
-import { useLocation } from "react-router";
+import { data, useLocation } from "react-router";
 import { useAccount } from "./useAccount";
 
-export const useActivities = (id? : string) => {
+export const useActivities = (id?: string) => {
     const queryClient = useQueryClient();
     const { currentUser } = useAccount();
     const location = useLocation();
@@ -14,18 +14,29 @@ export const useActivities = (id? : string) => {
             const response = await agent.get<Activity[]>("/activities");
             return response.data;
         },
-        enabled: !id && location.pathname === '/activities' && !!currentUser //disable when id is present and not in activities list page
-        
+        enabled: !id && location.pathname === '/activities' && !!currentUser, //disable when id is present and not in activities list page
+        select: data => {
+            return data.map(activity => {
+                const isHost = currentUser?.id == activity.hostId;
+                const isGoing = activity.attendees.some(x => x.id === currentUser?.id);
+                return { ...activity, isHost, isGoing };
+            })
+        }
         // staleTime: 5 * 60 * 1000, //5 minutes
     });
 
-    const {data: activity, isLoading : isLoadingActivity} = useQuery({
+    const { data: activity, isLoading: isLoadingActivity } = useQuery({
         queryKey: ['activities', id],
         queryFn: async () => {
             const response = await agent.get<Activity>(`/activities/${id}`);
             return response.data;
         },
-        enabled: !!id && !!currentUser //id not null or undefined, both useQuery would be executed
+        enabled: !!id && !!currentUser, //id not null or undefined, both useQuery would be executed
+        select: data => {
+            const isHost = currentUser?.id == data.hostId;
+            const isGoing = data.attendees.some(x => x.id === currentUser?.id);
+            return { ...data, isHost, isGoing };
+        }
     });
 
     const updateActivity = useMutation({
@@ -56,14 +67,14 @@ export const useActivities = (id? : string) => {
         }
     })
 
-    return { 
-        activities, 
-        isLoading, 
-        updateActivity, 
-        createActivity, 
-        deleteActivity, 
-        activity, 
-        isLoadingActivity 
+    return {
+        activities,
+        isLoading,
+        updateActivity,
+        createActivity,
+        deleteActivity,
+        activity,
+        isLoadingActivity
     };
     // const createActivity = useMutation({
     //     mutationFn: async (activity: Activity) => {
