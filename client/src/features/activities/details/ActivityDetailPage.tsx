@@ -1,5 +1,5 @@
-import { Button, Card, CardActions, CardContent, CardMedia, Grid, Grid2, Typography } from "@mui/material"
-import { Link, useNavigate, useParams } from "react-router";
+import { Grid2, Typography } from "@mui/material"
+import { useParams } from "react-router";
 import { useActivities } from "../../../lib/hooks/useActivities";
 import ActivityDetailsHeader from "./ActivityDetailsHeader";
 import ActivityDetailsInfo from "./ActivityDetailsInfo";
@@ -7,7 +7,6 @@ import ActivityDetailsChat from "./ActivityDetailsChat";
 import ActivityDetailsSidebar from "./ActivityDetailsSidebar";
 
 export default function ActivityDetailPage() {
-    const navigate = useNavigate();
     const { id } = useParams();
     const { activity, isLoadingActivity } = useActivities(id); // Replace with actual selected activity logic
 
@@ -23,7 +22,7 @@ export default function ActivityDetailPage() {
                 <ActivityDetailsChat />
             </Grid2>
             <Grid2 size={4}>
-                <ActivityDetailsSidebar />
+                <ActivityDetailsSidebar activity={activity} />
             </Grid2>
         </Grid2>
 
