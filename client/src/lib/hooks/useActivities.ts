@@ -2,8 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import agent from "../api/agent";
 import { useLocation } from "react-router";
 import { useAccount } from "./useAccount";
-import { isCancel } from "axios";
-import { is } from "date-fns/locale";
 
 export const useActivities = (id?: string) => {
     const queryClient = useQueryClient();
@@ -75,7 +73,9 @@ export const useActivities = (id?: string) => {
         },
         onMutate: async (activityId: string) => {
             await queryClient.cancelQueries({ queryKey: ['activities', activityId] });
+
             const prevActivity = queryClient.getQueryData<Activity>(['activities', activityId]);
+
             queryClient.setQueryData<Activity>(['activities', activityId], oldActivity => {
                 if (!oldActivity || !currentUser) {
                     return oldActivity;
@@ -92,10 +92,13 @@ export const useActivities = (id?: string) => {
                         ? isHost
                             ? oldActivity.attendees
                             : oldActivity.attendees.filter(x => x.id !== currentUser.id)
-                        : [...oldActivity.attendees, { id: currentUser.id, displayName: currentUser.displayName, imageUrl: currentUser.imageUrl }],
-                    isGoing: !isAttending,
-                    isHost
-                }
+                        : [...oldActivity.attendees, {
+                            id: currentUser.id,
+                            username: currentUser.displayName,
+                            displayName: currentUser.displayName,
+                            imageUrl: currentUser.imageUrl,
+                        }],
+                };
             });
             return { prevActivity };
         },
