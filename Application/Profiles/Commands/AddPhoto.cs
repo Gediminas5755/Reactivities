@@ -10,7 +10,7 @@ namespace Application.Profiles.Commands;
 
 public class AddPhoto
 {
-    class Command : IRequest<Result<Photo>>
+    public class Command : IRequest<Result<Photo>>
     {
         public required IFormFile File { get; set; }
     }
