@@ -8,35 +8,6 @@ using Persistence;
 
 namespace Application.Profiles.Commands;
 
-public class SetMainPhoto
-{
-     public class Command : IRequest<Result<Unit>>
-    {
-        public required string PhotoId { get; set; }
-    }
-
-    public class Handler(IUserAccessor userAccessor, AppDbContext context)
-        : IRequestHandler<Command, Result<Unit>>
-    {
-        public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
-        {
-            var user = await userAccessor.GetUserWithPhotosAsync();
-
-            var photo = user.Photos.FirstOrDefault(p => p.Id == request.PhotoId);
-
-            if (photo == null) return Result<Unit>.Failure("Photo not found", 400);
-
-            user.ImageUrl = photo.Url;
-
-                var result = await context.SaveChangesAsync(cancellationToken) > 0;
-            
-            return result
-                ? Result<Unit>.Success(Unit.Value)
-                : Result<Unit>.Failure("Problem changing main photo", 400);
-        }
-    }
-}
-
 public class AddPhoto
 {
     public class Command : IRequest<Result<Photo>>

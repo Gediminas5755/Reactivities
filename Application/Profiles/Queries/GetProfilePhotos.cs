@@ -22,7 +22,7 @@ public class GetProfilePhotos
                 .SelectMany(u => u.Photos)
                 .ToListAsync(cancellationToken);
 
-             return Result<List<Photo>>.Success(photos);
+            return Result<List<Photo>>.Success(photos);
         }
     }
 }

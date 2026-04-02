@@ -1,5 +1,6 @@
 
 using Application.Profiles.Commands;
+using Application.Profiles.DTOs;
 using Application.Profiles.Queries;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,13 @@ namespace API.Controllers
         {
             var command = new SetMainPhoto.Command { PhotoId = photoId };
             return HandleResult(await Mediator.Send(command));
+        }
+
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<UserProfile>> GetProfile(string userId)
+        {
+            var query = new GetProfile.Query { UserId = userId };
+            return HandleResult(await Mediator.Send(query));
         }
     }
 }
