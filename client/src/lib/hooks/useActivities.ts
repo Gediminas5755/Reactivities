@@ -19,7 +19,9 @@ export const useActivities = (id?: string) => {
             return data.map(activity => {
                 const isHost = currentUser?.id == activity.hostId;
                 const isGoing = activity.attendees.some(x => x.id === currentUser?.id);
-                return { ...activity, isHost, isGoing };
+                const host = activity.attendees.find(x => x.id === activity.hostId);
+                const hostImageUrl = host?.imageUrl || '';
+                return { ...activity, isHost, isGoing, hostImageUrl };
             })
         }
         // staleTime: 5 * 60 * 1000, //5 minutes
@@ -35,7 +37,10 @@ export const useActivities = (id?: string) => {
         select: data => {
             const isHost = currentUser?.id == data.hostId;
             const isGoing = data.attendees.some(x => x.id === currentUser?.id);
-            return { ...data, isHost, isGoing };
+            const host = data.attendees.find(x => x.id === data.hostId);
+            const hostImageUrl = host?.imageUrl || '';
+
+            return { ...data, isHost, isGoing, hostImageUrl };
         }
     });
 
