@@ -29,5 +29,12 @@ namespace API.Controllers
             var command = new DeletePhoto.Command { PhotoId = photoId };
             return HandleResult(await Mediator.Send(command));
         }
+
+        [HttpPut("{photoId}/setMain")]
+        public async Task<ActionResult> SetMainPhoto(string photoId)
+        {
+            var command = new SetMainPhoto.Command { PhotoId = photoId };
+            return HandleResult(await Mediator.Send(command));
+        }
     }
 }

@@ -20,7 +20,7 @@ public class DeletePhoto
         {
             var user = await userAccessor.GetUserWithPhotosAsync();
 
-            Debug.WriteLine($"User {user.UserName} has {user.Photos.Count} photos before deletion. {request.PhotoId} is the photo to delete.");
+            // Debug.WriteLine($"User {user.UserName} has {user.Photos.Count} photos before deletion. {request.PhotoId} is the photo to delete.");
             var photo = user.Photos.FirstOrDefault(p => p.Id == request.PhotoId);
 
             if (photo == null) return Result<Unit>.Failure("Photo not found", 400);
