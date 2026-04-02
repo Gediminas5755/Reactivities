@@ -22,5 +22,12 @@ namespace API.Controllers
             var query = new GetProfilePhotos.Query { UserId = userId };
             return HandleResult(await Mediator.Send(query));
         }
+
+        [HttpDelete("{photoId}/photos/")]
+        public async Task<ActionResult> DeletePhoto(string photoId)
+        {
+            var command = new DeletePhoto.Command { PhotoId = photoId };
+            return HandleResult(await Mediator.Send(command));
+        }
     }
 }
