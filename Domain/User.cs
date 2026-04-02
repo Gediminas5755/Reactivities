@@ -9,4 +9,7 @@ public class User : IdentityUser
     public string? ImageUrl { get; set; }
 
     public ICollection<ActivityAtendee> Activities { get; set; } = [];
+
+    public ICollection<Photo> Photos { get; set; } = [];
+
 }
