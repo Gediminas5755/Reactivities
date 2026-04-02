@@ -10,5 +10,14 @@ export const useProfile = (id?: string) => {
         }
     })
 
-    return { profile, loadingProfile }
+
+    const {data: photos, isLoading: loadingPhotos} = useQuery<Photo[]>({
+        queryKey: ['photos',id ],
+        queryFn: async () => {
+            const response = await agent.get<Photo[]>(`/profiles/${id}/photos`);
+            return response.data;
+        }
+    })
+
+    return { profile, loadingProfile, photos, loadingPhotos }
 }
