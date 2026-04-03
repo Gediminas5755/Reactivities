@@ -1,5 +1,4 @@
 ﻿namespace Domain;
-
 public class Activity
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -17,4 +16,5 @@ public class Activity
     public double Longitude { get; set; }
 
     public ICollection<ActivityAtendee> Attendees { get; set; } = [];
+    public ICollection<Comment> Comments { get; set; } = [];
 }
