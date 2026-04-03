@@ -9,6 +9,7 @@ import Button from "@mui/material/Button/Button";
 import PhotoUploadWidget from "../../app/shared/components/PhotoUploadWidget";
 import StarButton from "../../app/shared/components/StarButton";
 import DeleteButton from "../../app/shared/components/DeleteButton";
+import { Divider } from "@mui/material";
 
 export default function ProfilePhotos() {
     const { id } = useParams();
@@ -28,48 +29,57 @@ export default function ProfilePhotos() {
 
     return (
         <Box>
-            {isCurrentUser && (
-                <Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Typography variant="h5">Photos</Typography>
+                {isCurrentUser && (
                     <Button onClick={() => setEditMode(!editMode)}>
                         {editMode ? 'Cancel' : 'Manage Photos'}
                     </Button>
-                </Box>
-            )}
+                )}
+            </Box>
+            <Divider sx={{ my: 2 }} />
+
             {editMode ? (
                 <PhotoUploadWidget
                     uploadPhoto={handlePhotoUpload}
                     loading={uploadPhoto.isPending}
                 />
             ) : (
-                <ImageList sx={{ height: 450 }} cols={6} rowHeight={164}>
-                    {photos.map((item) => (
-                        <ImageListItem key={item.id}>
-                            <img
-                                srcSet={`${item.url.replace('/upload', '/upload/w_164,h_164,c_fill,dpr_2,f_auto')}`}
-                                src={`${item.url.replace('/upload', '/upload/w_164,h_164,c_fill,dpr_2,f_auto')}`}
-                                alt={'Photo profile img'}
-                                loading="lazy"
-                            />
-                            {isCurrentUser && (
-                                <div>
-                                <Box
-                                    sx={{ position: 'absolute', top: 0, left: 0 }}
-                                    onClick={() => setMainPhoto.mutate(item)}>
-                                    <StarButton
-                                        selected={item.url === profile?.imageUrl} />
-                                </Box>
-                                {profile?.imageUrl !== item.url && (
-                                    <Box
-                                        sx={{ position: 'absolute', top: 0, right: 0 }}
-                                        onClick={() => deletePhoto.mutate(item.id)}>
-                                        <DeleteButton />
-                                    </Box>
-                                )}
-                                </div>
-                            )}
-                        </ImageListItem>
-                    ))}
-                </ImageList>
+                <>
+                    {photos.length === 0 ? (
+                        <Typography>No photos uploaded yet</Typography>
+                    ) : (
+                        <ImageList sx={{ height: 450 }} cols={6} rowHeight={164}>
+                            {photos.map((item) => (
+                                <ImageListItem key={item.id}>
+                                    <img
+                                        srcSet={`${item.url.replace('/upload', '/upload/w_164,h_164,c_fill,dpr_2,f_auto')}`}
+                                        src={`${item.url.replace('/upload', '/upload/w_164,h_164,c_fill,dpr_2,f_auto')}`}
+                                        alt={'Photo profile img'}
+                                        loading="lazy"
+                                    />
+                                    {isCurrentUser && (
+                                        <div>
+                                            <Box
+                                                sx={{ position: 'absolute', top: 0, left: 0 }}
+                                                onClick={() => setMainPhoto.mutate(item)}>
+                                                <StarButton
+                                                    selected={item.url === profile?.imageUrl} />
+                                            </Box>
+                                            {profile?.imageUrl !== item.url && (
+                                                <Box
+                                                    sx={{ position: 'absolute', top: 0, right: 0 }}
+                                                    onClick={() => deletePhoto.mutate(item.id)}>
+                                                    <DeleteButton />
+                                                </Box>
+                                            )}
+                                        </div>
+                                    )}
+                                </ImageListItem>
+                            ))}
+                        </ImageList>
+                )}
+            </>
             )
             }
         </Box >

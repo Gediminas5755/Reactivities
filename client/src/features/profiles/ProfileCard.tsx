@@ -16,10 +16,20 @@ export default function ProfileCard({ profile }: Props) {
                     component="img"
                     src={profile?.imageUrl || '/images/user.png'}
                     alt={profile.displayName + ' image'}
-                    sx={{ width: 200, zIndex: 50 }} />
+                    sx={{ width: '100%', zIndex: 50 }} />
                 <CardContent>
                     <Box display='flex' flexDirection='column' gap={1}>
                         <Typography variant="h5" >{profile.displayName}</Typography>
+                        {profile.bio &&
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap'
+                                }}>
+                                {profile.bio}
+                            </Typography>}
                         {following && <Chip size="small" variant="outlined" color="secondary" label="Following" />}
                     </Box>
                 </CardContent>
