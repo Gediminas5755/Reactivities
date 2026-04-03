@@ -1,10 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import agent from "../api/agent";
 import { useMemo } from "react";
-import { data } from "react-router";
 
 export const useProfile = (id?: string) => {
-    const queryClint = useQueryClient();
+    const queryClient = useQueryClient();
 
     const { data: profile, isLoading: loadingProfile } = useQuery<Profile>({
         queryKey: ['profile', id],
@@ -35,15 +34,15 @@ export const useProfile = (id?: string) => {
             return response.data;
         },
         onSuccess: async (photo: Photo) => {
-            await queryClint.invalidateQueries({ queryKey: ['photos', id] }); //refresh photos after successful upload
-            queryClint.setQueryData(['user'], (data: User) => {
+            await queryClient.invalidateQueries({ queryKey: ['photos', id] }); //refresh photos after successful upload
+            queryClient.setQueryData(['user'], (data: User) => {
                 if (!data) return data;
                 return {
                     ...data,
                     imageUrl: data.imageUrl ?? photo.url //update user's main photo url after successful upload};
                 }
             });
-            queryClint.setQueryData(['profile', id], (data: Profile) => {
+            queryClient.setQueryData(['profile', id], (data: Profile) => {
                 if (!data) return data;
                 return {
                     ...data,
@@ -58,7 +57,7 @@ export const useProfile = (id?: string) => {
             await agent.put(`/profiles/${photo.id}/setMain`, {});
         },
         onSuccess: async (_, photo) => {
-            queryClint.setQueryData(['user'], (userData: User) => {
+            queryClient.setQueryData(['user'], (userData: User) => {
                 if (!userData) return userData;
                 return {
                     ...userData,
@@ -66,7 +65,7 @@ export const useProfile = (id?: string) => {
                 };
             });
 
-            queryClint.setQueryData(['profile', id], (profileData: Profile) => {
+            queryClient.setQueryData(['profile', id], (profileData: Profile) => {
                 if (!profileData) return profileData;
                 return {
                     ...profileData,
@@ -76,9 +75,21 @@ export const useProfile = (id?: string) => {
         }
     });
 
-    const isCurrentUser = useMemo(() => {
-        return id === queryClint.getQueryData<User>(['user'])?.id;
-    }, [id, queryClint]);
+    const deletePhoto = useMutation({
+        mutationFn: async (photoId: string) => {
+            await agent.delete(`/profiles/${photoId}/photos`);
+        },
+        onSuccess: async (_, photoId) => {
+            queryClient.setQueryData(['photos', id], (photos: Photo[]) => {
+                return photos.filter(photo => photo.id !== photoId);
+            });
+        }
+    });
 
-    return { profile, loadingProfile, photos, loadingPhotos, isCurrentUser, uploadPhoto, setMainPhoto };
+
+    const isCurrentUser = useMemo(() => {
+        return id === queryClient.getQueryData<User>(['user'])?.id;
+    }, [id, queryClient]);
+
+    return { profile, loadingProfile, photos, loadingPhotos, isCurrentUser, uploadPhoto, setMainPhoto, deletePhoto };
 }
