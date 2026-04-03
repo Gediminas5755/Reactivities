@@ -29,7 +29,7 @@ export const useProfile = (id?: string) => {
         mutationFn: async (file: Blob) => {
             const formData = new FormData();
             formData.append('file', file);
-            const response = await agent.post('/profiles/add-photo', formData,  {
+            const response = await agent.post('/profiles/add-photo', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             return response.data;
@@ -53,9 +53,32 @@ export const useProfile = (id?: string) => {
         }
     })
 
+    const setMainPhoto = useMutation({
+        mutationFn: async (photo: Photo) => {
+            await agent.put(`/profiles/${photo.id}/setMain`, {});
+        },
+        onSuccess: async (_, photo) => {
+            queryClint.setQueryData(['user'], (userData: User) => {
+                if (!userData) return userData;
+                return {
+                    ...userData,
+                    imageUrl: photo.url
+                };
+            });
+
+            queryClint.setQueryData(['profile', id], (profileData: Profile) => {
+                if (!profileData) return profileData;
+                return {
+                    ...profileData,
+                    imageUrl: photo.url
+                };
+            });
+        }
+    });
+
     const isCurrentUser = useMemo(() => {
         return id === queryClint.getQueryData<User>(['user'])?.id;
     }, [id, queryClint]);
 
-    return { profile, loadingProfile, photos, loadingPhotos, isCurrentUser, uploadPhoto };
+    return { profile, loadingProfile, photos, loadingPhotos, isCurrentUser, uploadPhoto, setMainPhoto };
 }
