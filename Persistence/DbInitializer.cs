@@ -12,18 +12,21 @@ public class DbInitializer
         {
             new()
             {
+                Id = "bid",
                 UserName = "bob@test.com",//"johndoe",
                 Email = "bob@test.com",
                 DisplayName = "Bob",
             },
             new()
             {
+                Id = "jid",
                 UserName = "jane@test.com",//"janedoe",
                 Email = "jane@test.com",
                 DisplayName = "Jane",
             },
             new()
             {
+                Id = "mid",
                 UserName = "mike@test.com",//"mikedoe",
                 Email = "mike@test.com",
                 DisplayName = "Mike",

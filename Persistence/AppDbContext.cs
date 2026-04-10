@@ -12,6 +12,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public required DbSet<ActivityAtendee> ActivityAttendees { get; set; }
     public required DbSet<Photo> Photos { get; set; }
     public required DbSet<Comment> Comments { get; set; }
+    public required DbSet<UserFollowing> UserFollowings { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -30,6 +32,34 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             .WithMany(a => a.Attendees)
             .HasForeignKey(aa => aa.ActivityId);
 
+        modelBuilder.Entity<UserFollowing>(x =>
+            {
+                x.HasKey(uf => new { uf.ObserverId, uf.TargetId });
+
+                x.HasOne(uf => uf.Observer)
+                 .WithMany(u => u.Followings)
+                 .HasForeignKey(uf => uf.ObserverId)
+                 .OnDelete(DeleteBehavior.Cascade);
+
+                x.HasOne(uf => uf.Target)
+                 .WithMany(u => u.Followers)
+                 .HasForeignKey(uf => uf.TargetId)
+                 .OnDelete(DeleteBehavior.Cascade);
+            });
+
+        // modelBuilder.Entity<UserFollowing>()//sets composite primary key
+        //     .HasKey(uf => new { uf.ObserverId, uf.TargetId });
+
+        // modelBuilder.Entity<UserFollowing>()// sets relationships
+        //     .HasOne(uf => uf.Observer)
+        //     .WithMany(u => u.Followings)
+        //     .HasForeignKey(uf => uf.ObserverId);
+
+        // modelBuilder.Entity<UserFollowing>()
+        //     .HasOne(uf => uf.Target)
+        //     .WithMany(u => u.Followers)
+        //     .HasForeignKey(uf => uf.TargetId);
+
         var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
             v => v.ToUniversalTime(),
             v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
@@ -37,7 +67,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             var properties = entityType.GetProperties();
-                // .Where(p => p.PropertyType == typeof(DateTime) || p.PropertyType == typeof(DateTime?));
+            // .Where(p => p.PropertyType == typeof(DateTime) || p.PropertyType == typeof(DateTime?));
 
             foreach (var property in properties)
             {
