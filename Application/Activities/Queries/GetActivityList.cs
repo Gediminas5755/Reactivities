@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using AutoMapper;
 using Application.Activities.DTOs;
 using AutoMapper.QueryableExtensions;
+using Application.Interfaces;
 
 namespace Application.Activities.Queries;
 
@@ -16,7 +17,7 @@ public class GetActivityList
     {
     }
 
-    public class Handler(AppDbContext context, ILogger<GetActivityList> logger, IMapper mapper) : IRequestHandler<Querry, List<ActivityDto>>
+    public class Handler(AppDbContext context, ILogger<GetActivityList> logger, IMapper mapper, IUserAccessor userAccessor) : IRequestHandler<Querry, List<ActivityDto>>
     {
         public async Task<List<ActivityDto>> Handle(Querry request, CancellationToken cancellationToken)
         {
@@ -34,7 +35,7 @@ public class GetActivityList
             //     logger.LogInformation(ex, "Task was cancelled");
             // }
             return await context.Activities
-                .ProjectTo<ActivityDto>(mapper.ConfigurationProvider)
+                .ProjectTo<ActivityDto>(mapper.ConfigurationProvider, new { currentUserId = userAccessor.GetUserId() })
                 .ToListAsync(cancellationToken);
         }
     }

@@ -28,14 +28,14 @@ public class GetFollowings
                     profiles = await context.UserFollowings
                         .Where(f => f.TargetId == request.UserId)
                         .Select(f => f.Observer)
-                        .ProjectTo<UserProfile>(mapper.ConfigurationProvider)
+                        .ProjectTo<UserProfile>(mapper.ConfigurationProvider, new { currentUserId = request.UserId })
                         .ToListAsync(cancellationToken);
                     break;
                 case "followings":
                     profiles = await context.UserFollowings
                         .Where(f => f.ObserverId == request.UserId)
                         .Select(f => f.Target)
-                        .ProjectTo<UserProfile>(mapper.ConfigurationProvider)
+                        .ProjectTo<UserProfile>(mapper.ConfigurationProvider, new { currentUserId = request.UserId })
                         .ToListAsync(cancellationToken);
                     break;
             }

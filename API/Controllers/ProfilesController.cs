@@ -57,5 +57,12 @@ namespace API.Controllers
             var command = new FollowToggle.Command { TargetUserId = userId };
             return HandleResult(await Mediator.Send(command));
         }
+
+        [HttpGet("{userId}/follow-list")]
+        public async Task<ActionResult> Followings(string userId, string predicate)
+        {
+            var query = new GetFollowings.Query { UserId = userId, Predicate = predicate };
+            return HandleResult(await Mediator.Send(query));
+        }
     }
 }
