@@ -16,7 +16,7 @@ public class FollowToggle
     {
         public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
-            var observer = userAccessor.GetUserAsync();
+            var observer = await userAccessor.GetUserAsync();
             var target = await context.Users.FindAsync([request.TargetUserId]);
             if (target == null) return Result<Unit>.Failure("Target User not found", 400);
 

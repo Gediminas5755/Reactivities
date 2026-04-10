@@ -5,7 +5,6 @@ type Props = {
 }
 
 export default function ProfileHeader({ profile }: Props) {
-    const isFollowing = true;
     return (
         <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
             <Grid2 container spacing={2}>
@@ -14,7 +13,7 @@ export default function ProfileHeader({ profile }: Props) {
                         <Avatar alt={`${profile.displayName}'s image`} src={profile.imageUrl} sx={{ width: 150, height: 150 }} />
                         <Box display="flex" flexDirection="column" gap={2}>
                             <Typography variant="h4">{profile.displayName}</Typography>
-                            {isFollowing && <Chip label="Following" color="secondary" variant="outlined" sx={{borderRadius : 1}} />}
+                            {profile.following && <Chip label="Following" color="secondary" variant="outlined" sx={{borderRadius : 1}} />}
                         </Box>
                     </Stack>
                 </Grid2>
@@ -23,16 +22,16 @@ export default function ProfileHeader({ profile }: Props) {
                     <Box display="flex" justifyContent='space-around' width='100%'>
                         <Box textAlign="center">
                             <Typography variant="h6">Followers</Typography>
-                            <Typography variant="h5">100</Typography>
+                            <Typography variant="h5">{profile.followersCount}</Typography>
                         </Box>
                          <Box textAlign="center">
                             <Typography variant="h6">Following</Typography>
-                            <Typography variant="h5">150</Typography>
+                            <Typography variant="h5">{profile.followingCount}</Typography>
                         </Box>
                     </Box>
                     <Divider sx={{ width: '100%' }} />
-                    <Button variant="outlined" color={isFollowing ? 'error' : 'success'} fullWidth>
-                        {isFollowing ? 'Unfollow' : 'Follow'}
+                    <Button variant="outlined" color={profile.following ? 'error' : 'success'} fullWidth>
+                        {profile.following ? 'Unfollow' : 'Follow'}
                     </Button>
                     {/* <Chip label='This is you' color='primary' variant='outlined' /> */}
                     </Stack>

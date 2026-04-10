@@ -39,12 +39,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 x.HasOne(uf => uf.Observer)
                  .WithMany(u => u.Followings)
                  .HasForeignKey(uf => uf.ObserverId)
-                 .OnDelete(DeleteBehavior.Cascade);
+                  .OnDelete(DeleteBehavior.Cascade)
+                 ;
 
                 x.HasOne(uf => uf.Target)
                  .WithMany(u => u.Followers)
                  .HasForeignKey(uf => uf.TargetId)
-                 .OnDelete(DeleteBehavior.Cascade);
+                  .OnDelete(DeleteBehavior.Restrict)
+                 ;
             });
 
         // modelBuilder.Entity<UserFollowing>()//sets composite primary key
