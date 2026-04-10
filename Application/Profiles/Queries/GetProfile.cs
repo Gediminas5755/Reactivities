@@ -5,7 +5,6 @@ using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-
 namespace Application.Profiles.Queries;
 
 public class GetProfile
