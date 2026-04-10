@@ -50,5 +50,12 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(command));
         }
+
+        [HttpPost("{userId}/follow")]
+        public async Task<ActionResult> FollowToggle(string userId)
+        {
+            var command = new FollowToggle.Command { TargetUserId = userId };
+            return HandleResult(await Mediator.Send(command));
+        }
     }
 }
