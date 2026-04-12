@@ -114,7 +114,24 @@ export const useProfile = (id?: string) => {
         }
     })
 
+    const updateFollowing = useMutation({
+        mutationFn: async () => {
+            await agent.post(`profiles/${id}/follow`);
+        },
+        onSuccess: async () => {
+            await queryClient.setQueryData(['profile', id], (profile: Profile) => {
+                if (!profile || profile.followersCount === undefined) return profile; // !profile.followersCount == 0 bad!
+                return {
+                    ...profile,
+                    following: !profile.following,
+                    followersCount: profile.following ? profile.followersCount - 1 : profile.followersCount + 1
+                }
+            })
+        }
+    })
 
-    return { profile, loadingProfile, photos, loadingPhotos, isCurrentUser, uploadPhoto, 
-             setMainPhoto, deletePhoto, updateProfile };
-}
+    return {
+            profile, loadingProfile, photos, loadingPhotos, isCurrentUser, uploadPhoto,
+            setMainPhoto, deletePhoto, updateProfile, updateFollowing
+        };
+    }
