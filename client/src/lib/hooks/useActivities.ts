@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import agent from "../api/agent";
 import { useLocation } from "react-router";
 import { useAccount } from "./useAccount";
@@ -8,22 +8,35 @@ export const useActivities = (id?: string) => {
     const { currentUser } = useAccount();
     const location = useLocation();
 
-    const { data: activities, isLoading } = useQuery({
+    const { data: activitiesGroup, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery<PagedList<Activity, string>>({
         queryKey: ['activities'],
-        queryFn: async () => {
-            const response = await agent.get<Activity[]>("/activities");
+        queryFn: async ({ pageParam = null }) => {
+            const response = await agent.get<PagedList<Activity, string>>("/activities", {
+                params: {
+                    cursor: pageParam,
+                    limit: 3
+                }
+            });
             return response.data;
         },
+        initialPageParam: null,
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
         enabled: !id && location.pathname === '/activities' && !!currentUser, //disable when id is present and not in activities list page
-        select: data => {
-            return data.map(activity => {
-                const isHost = currentUser?.id == activity.hostId;
-                const isGoing = activity.attendees.some(x => x.id === currentUser?.id);
-                const host = activity.attendees.find(x => x.id === activity.hostId);
+        select: data => ({
+            ...data,
+            pages: data.pages.map((page) => ({
+                ...page,
+                items: page.items.map(activity => {
+                    const host = activity.attendees.find(x => x.id === activity.hostId);
+
+                    const isHost = currentUser?.id == activity.hostId;
+                    const isGoing = activity.attendees.some(x => x.id === currentUser?.id);
                 const hostImageUrl = host?.imageUrl || '';
+
                 return { ...activity, isHost, isGoing, hostImageUrl };
-            })
-        }
+                })
+            }))
+        })
         // staleTime: 5 * 60 * 1000, //5 minutes
     });
 
@@ -121,8 +134,12 @@ export const useActivities = (id?: string) => {
 
 
     return {
-        activities,
+        activitiesGroup,
+        
         isLoading,
+        isFetchingNextPage,
+        fetchNextPage,
+        hasNextPage,
         updateActivity,
         createActivity,
         deleteActivity,
