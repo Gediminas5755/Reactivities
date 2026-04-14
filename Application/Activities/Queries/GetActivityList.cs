@@ -33,7 +33,7 @@ public class GetActivityList
 
             var query = context.Activities
                 .OrderBy(a => a.Date)
-                .Where(a => a.Date >= request.Cursor)
+              //  .Where(a => a.Date >= request.Cursor)
                 .AsQueryable();
 
             if (request.Cursor.HasValue)
