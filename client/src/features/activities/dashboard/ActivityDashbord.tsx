@@ -1,23 +1,22 @@
-import { Button, Grid2 } from "@mui/material";
+import { Grid2 } from "@mui/material";
 import ActivityList from "./ActivityList";
 import ActivityFilters from "./ActivityFilters";
-import { useActivities } from "../../../lib/hooks/useActivities";
 
 export default function ActivityDashbord() {
-    const { isFetchingNextPage, fetchNextPage, hasNextPage } = useActivities();
+    // const { isFetchingNextPage, fetchNextPage, hasNextPage } = useActivities();
 
     return (
         <Grid2 container spacing={3}>
             <Grid2 size={7}>
                 <ActivityList />
-                <Button
+                {/* <Button
                     onClick={() => fetchNextPage()}
                     sx={{ my: 2, float: 'right' }}
                     variant="contained"
                     disabled={!hasNextPage || isFetchingNextPage}
                 >
                     Load More
-                </Button>
+                </Button> */}
 
             </Grid2>
             <Grid2 size={4}
