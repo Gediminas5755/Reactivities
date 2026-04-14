@@ -19,6 +19,7 @@ export const useActivities = (id?: string) => {
             });
             return response.data;
         },
+        staleTime: 5 * 60 * 1000, //5 minutes cache time for activities list
         initialPageParam: null,
         getNextPageParam: (lastPage) => lastPage.nextCursor,
         enabled: !id && location.pathname === '/activities' && !!currentUser, //disable when id is present and not in activities list page
