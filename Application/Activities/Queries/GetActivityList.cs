@@ -10,19 +10,17 @@ using Application.Core;
 
 namespace Application.Activities.Queries;
 
+public class ActivityParams : PaginationParams<DateTime?>
+{
+    public string? Filter { get; set; }
+    public DateTime StartDate { get; set; } = DateTime.UtcNow;
+}
+
 public class GetActivityList
 {
-    private const int MaxPageSize = 50;
     public class Querry : IRequest<Result<PagedList<ActivityDto, DateTime?>>>
     {
-        public DateTime? Cursor { get; set; }
-        private int _pageSize = 3;
-        public int PageSize
-        {
-            get { return _pageSize; }
-            set { _pageSize = value > MaxPageSize ? MaxPageSize : value; }
-        }
-
+        public required ActivityParams Params { get; set; }
     }
 
     public class Handler(AppDbContext context, ILogger<GetActivityList> logger, IMapper mapper, IUserAccessor userAccessor)
@@ -33,21 +31,34 @@ public class GetActivityList
 
             var query = context.Activities
                 .OrderBy(a => a.Date)
-              //  .Where(a => a.Date >= request.Cursor)
+                .Where(a => a.Date >= (request.Params.Cursor ?? request.Params.StartDate))
                 .AsQueryable();
 
-            if (request.Cursor.HasValue)
+            // if (request.Cursor.HasValue)
+            // {
+            //     query = query.Where(a => a.Date > request.Cursor.Value);
+            // }
+
+            if (!string.IsNullOrEmpty(request.Params.Filter))
             {
-                query = query.Where(a => a.Date > request.Cursor.Value);
+                query = request.Params.Filter.ToLower() switch
+                {
+                    "isgoing" => query.Where(a => a.Attendees.Any(at => at.UserId == userAccessor.GetUserId())),
+                    "ishost" => query.Where(a => a.Attendees.Any(at => at.UserId == userAccessor.GetUserId() && 
+                                                                 at.IsHost)),
+                    _ => query
+                };
             }
 
-            var activities = await query
-                .Take(request.PageSize + 1)
-                .ProjectTo<ActivityDto>(mapper.ConfigurationProvider, new { currentUserId = userAccessor.GetUserId() })
+            var projectedActivities = query
+                .ProjectTo<ActivityDto>(mapper.ConfigurationProvider, new { currentUserId = userAccessor.GetUserId() });
+
+            var activities = await projectedActivities
+                .Take(request.Params.PageSize + 1)
                 .ToListAsync(cancellationToken);
 
             DateTime? nextCursor = null;
-            if (activities.Count > request.PageSize)
+            if (activities.Count > request.Params.PageSize)
             {
                 nextCursor = activities.Last().Date;
                 activities.RemoveAt(activities.Count - 1);

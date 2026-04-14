@@ -13,9 +13,13 @@ public class ActivitiesController : BaseApiController
 {
     // [AllowAnonymous]
     [HttpGet]
-    public async Task<ActionResult<PagedList<ActivityDto, DateTime?>>> GetActivities(DateTime? cursor, CancellationToken token)
+    public async Task<ActionResult<PagedList<ActivityDto, DateTime?>>> GetActivities(
+        [FromQuery] ActivityParams activityParams
+    )
     {
-        return HandleResult(await Mediator.Send(new GetActivityList.Querry { Cursor = cursor }, token));
+        return HandleResult(
+            await Mediator.Send(new GetActivityList.Querry { Params = activityParams })
+        );
     }
 
     // [Authorize]
@@ -32,8 +36,9 @@ public class ActivitiesController : BaseApiController
     [HttpPost]
     public async Task<ActionResult<string>> CreateActivity(CreateActivityDto activityDto)
     {
-        return HandleResult(await Mediator.Send(new CreateActivity.Command { ActivityDto = activityDto }));
-
+        return HandleResult(
+            await Mediator.Send(new CreateActivity.Command { ActivityDto = activityDto })
+        );
     }
 
     [HttpPut("{id}")]
@@ -41,7 +46,9 @@ public class ActivitiesController : BaseApiController
     public async Task<ActionResult> EditActivity(string id, EditActivityDto activity)
     {
         activity.Id = id;
-        return HandleResult(await Mediator.Send(new EditActivity.Command { ActivityDto = activity }));
+        return HandleResult(
+            await Mediator.Send(new EditActivity.Command { ActivityDto = activity })
+        );
     }
 
     [HttpDelete("{id}")]
