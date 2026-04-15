@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import agent from "../api/agent";
 import { useLocation } from "react-router";
 import { useAccount } from "./useAccount";
@@ -11,7 +11,7 @@ export const useActivities = (id?: string) => {
     const location = useLocation();
 
     const { data: activitiesGroup, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery<PagedList<Activity, string>>({
-        queryKey: ['activities'],
+        queryKey: ['activities', filter, startDate],
         queryFn: async ({ pageParam = null }) => {
             const response = await agent.get<PagedList<Activity, string>>("/activities", {
                 params: {
@@ -24,6 +24,7 @@ export const useActivities = (id?: string) => {
             return response.data;
         },
         staleTime: 5 * 60 * 1000, //5 minutes cache time for activities list
+        placeholderData: keepPreviousData, //keep previous data while fetching new data
         initialPageParam: null,
         getNextPageParam: (lastPage) => lastPage.nextCursor,
         enabled: !id && location.pathname === '/activities' && !!currentUser, //disable when id is present and not in activities list page
