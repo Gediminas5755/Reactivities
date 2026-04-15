@@ -1,4 +1,3 @@
-
 using Application.Profiles.Commands;
 using Application.Profiles.DTOs;
 using Application.Profiles.Queries;
@@ -62,6 +61,13 @@ namespace API.Controllers
         public async Task<ActionResult> Followings(string userId, string predicate)
         {
             var query = new GetFollowings.Query { UserId = userId, Predicate = predicate };
+            return HandleResult(await Mediator.Send(query));
+        }
+
+        [HttpGet("{userId}/activities")]
+        public async Task<ActionResult<List<UserActivityDto>>> GetUserActivities(string userId, string filter)
+        {
+            var query = new GetUserActivities.Query { UserId = userId, Filter = filter };
             return HandleResult(await Mediator.Send(query));
         }
     }
