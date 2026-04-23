@@ -3,7 +3,7 @@ import { HubConnection, HubConnectionBuilder, HubConnectionState } from "@micros
 import { useEffect, useRef } from "react";
 import { runInAction } from "mobx";
 
-export const useComments = (activityId: string) => {
+export const useComments = (activityId?: string) => {
     const created = useRef(false);
     const commentStore = useLocalObservable(() => ({
         comments: [] as ChatComment[],

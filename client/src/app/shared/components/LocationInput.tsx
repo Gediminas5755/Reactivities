@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { type FieldValues, type UseControllerProps, useController } from "react-hook-form"
-import type { LocationIQSuggestion } from "../../../lib/types";
 import { Box, debounce, List, ListItemButton, TextField, Typography } from "@mui/material";
 import axios from "axios";
 

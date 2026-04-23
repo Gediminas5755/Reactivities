@@ -71,9 +71,14 @@ app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod()
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapControllers();
 app.MapGroup("api").MapIdentityApi<User>();// we will use same api path prefix "api/login" for identity endpoints
 app.MapHub<CommentHub>("/comments");
+app.MapFallbackToController("Index", "Fallback");// for any other path, return index.html and let react router handle it
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
