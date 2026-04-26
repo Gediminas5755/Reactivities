@@ -23,7 +23,7 @@ export const useActivities = (id?: string) => {
             });
             return response.data;
         },
-        staleTime: 5 * 60 * 1000, //5 minutes cache time for activities list
+        // staleTime: 5 * 60 * 1000, //5 minutes cache time for activities list
         placeholderData: keepPreviousData, //keep previous data while fetching new data
         initialPageParam: null,
         getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -65,10 +65,10 @@ export const useActivities = (id?: string) => {
 
     const updateActivity = useMutation({
         mutationFn: async (activity: Activity) => {
-            await agent.put(`/activities`, activity);
+            await agent.put(`/activities/${activity.id}`, activity);
         },
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ['activities'] });
+            await queryClient.invalidateQueries({ queryKey: ['activities', activity?.id] });
         }
     })
 
