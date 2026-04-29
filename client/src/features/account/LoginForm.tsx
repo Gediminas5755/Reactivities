@@ -39,7 +39,7 @@ export default function LoginForm() {
                 navigate(location.state?.from || '/activities');
             },
             onError: error => {
-                if (error instanceof Error && error.message === 'NotAllowed') {
+                if (error.message === 'NotAllowed') {
                     setNotVerified(true);
                 }
             }

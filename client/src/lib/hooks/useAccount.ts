@@ -16,7 +16,7 @@ export const useAccount = () => {
         },
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['user'] });
-            // await navigate('/activities');
+             await navigate('/activities');
         }
     });
 

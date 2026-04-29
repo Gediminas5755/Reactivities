@@ -54,7 +54,7 @@ builder.Services.AddTransient<API.Middleware.ExceptionMiddleware>();//AddTransie
 builder.Services.AddIdentityApiEndpoints<User>(opt =>
 {
     opt.User.RequireUniqueEmail = true;
-    opt.SignIn.RequireConfirmedEmail = false;
+    opt.SignIn.RequireConfirmedEmail = true;
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<AppDbContext>();
