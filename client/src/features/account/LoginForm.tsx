@@ -7,7 +7,6 @@ import { LockOpen } from "@mui/icons-material";
 import TextInput from "../../app/shared/components/TextInput";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useState } from "react";
-import { ca } from "zod/v4/locales";
 import { toast } from "react-toastify";
 
 export default function LoginForm() {
