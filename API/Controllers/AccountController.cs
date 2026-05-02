@@ -8,8 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-public class AccountController(SignInManager<User> signInManager, IEmailSender<User> emailSender, IConfiguration config)
-    : BaseApiController
+public class AccountController(
+    SignInManager<User> signInManager,
+    IEmailSender<User> emailSender,
+    IConfiguration config
+) : BaseApiController
 {
     [AllowAnonymous]
     [HttpPost("register")]
@@ -19,7 +22,7 @@ public class AccountController(SignInManager<User> signInManager, IEmailSender<U
         {
             UserName = registerDto.Email,
             Email = registerDto.Email,
-            DisplayName = registerDto.DisplayName
+            DisplayName = registerDto.DisplayName,
         };
         var result = await signInManager.UserManager.CreateAsync(user, registerDto.Password);
 
@@ -46,43 +49,74 @@ public class AccountController(SignInManager<User> signInManager, IEmailSender<U
             return BadRequest("Email or userId are required");
         }
 
-        var user = await signInManager.UserManager.Users.FirstOrDefaultAsync(x=> x.Email == email || x.Id == userId);
-        if (user == null || string.IsNullOrEmpty(user.Email)) return BadRequest("user with email not found");
+        var user = await signInManager.UserManager.Users.FirstOrDefaultAsync(x =>
+            x.Email == email || x.Id == userId
+        );
+        if (user == null || string.IsNullOrEmpty(user.Email))
+            return BadRequest("user with email not found");
 
         await SendConfirmationEmailAsync(user, user.Email);
         return Ok();
     }
+
     private async Task SendConfirmationEmailAsync(User user, string email)
     {
         var code = await signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(System.Text.Encoding.UTF8.GetBytes(code));
-        var confirmEmailUrl = $"{config["ClientAppUrl"]}/confirm-email?userId={user.Id}&code={code}";
+        var confirmEmailUrl =
+            $"{config["ClientAppUrl"]}/confirm-email?userId={user.Id}&code={code}";
         await emailSender.SendConfirmationLinkAsync(user, email, confirmEmailUrl);
     }
 
     [AllowAnonymous]
     [HttpGet("user-info")]
-    public async Task<ActionResult> GetUserInfo()//check for authenticated user cookie
+    public async Task<ActionResult> GetUserInfo() //check for authenticated user cookie
     {
-        if (User.Identity?.IsAuthenticated == false) return NoContent();
+        if (User.Identity?.IsAuthenticated == false)
+            return NoContent();
 
         var user = await signInManager.UserManager.GetUserAsync(User);
 
-        if (user == null) return Unauthorized();
+        if (user == null)
+            return Unauthorized();
 
-        return Ok(new
-        {
-            user.DisplayName,
-            user.Email,
-            user.Id,
-            user.ImageUrl,
-        });
+        return Ok(
+            new
+            {
+                user.DisplayName,
+                user.Email,
+                user.Id,
+                user.ImageUrl,
+            }
+        );
     }
 
     [HttpPost("logout")]
     public async Task<ActionResult> Logout()
     {
-        await signInManager.SignOutAsync();//removes the authentication cookie
+        await signInManager.SignOutAsync(); //removes the authentication cookie
         return NoContent();
+    }
+
+    [HttpPost("change-password")]
+    public async Task<ActionResult> ChangePassword(ChangePasswordDto passwordDto)
+    {
+        var user = await signInManager.UserManager.GetUserAsync(User);
+        if (user == null)
+            return Unauthorized();
+
+        var result = await signInManager.UserManager.ChangePasswordAsync(
+            user,
+            passwordDto.CurrentPassword,
+            passwordDto.NewPassword
+        );
+
+        if (result.Succeeded)
+        {
+            // await signInManager.RefreshSignInAsync(user);
+            return Ok();
+        }
+
+        return BadRequest(result.Errors.First().Description);
     }
 }
