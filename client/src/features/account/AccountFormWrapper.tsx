@@ -5,7 +5,7 @@ import type { FieldValues, Resolver } from "react-hook-form";
 type Props<TFormData extends FieldValues> = {
     title: string;
     icon: React.ReactNode;
-    onSubmit: (data: TFormData) => void;
+    onSubmit: (data: TFormData) => Promise<void>;
     children: React.ReactNode;
     submitButtonText: string;
     resolver?: Resolver<TFormData>;
@@ -16,8 +16,8 @@ export default function AccountFormWrapper<TFormData extends FieldValues>(
     { title, icon, onSubmit, children, submitButtonText, resolver, reset }: Props<TFormData>) {
     const methods = useForm<TFormData>({ resolver, mode: 'onTouched' });
 
-    const formSubmit = (data : TFormData) => {
-        onSubmit(data);
+    const formSubmit = async (data : TFormData) => {
+        await onSubmit(data);
         if (reset) methods.reset();
     }
     return (
